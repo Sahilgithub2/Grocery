@@ -1,0 +1,188 @@
+/* Remove scrollbar */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.body {
+    background-color: #f1f5f9;
+    font-family: 'Inter', sans-serif;
+}
+
+
+.product-card {
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    padding: 1rem;
+    background-color: #ffffff;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+.product-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.section-title {
+    color: #0b0b0b;
+    margin-bottom: 1rem;
+}
+
+
+.header,
+.footer {
+    background-color: rgb(0, 153, 0);
+}
+
+.nav-link:hover {
+    text-decoration: underline;
+}
+
+.addButton {
+    background-color: rgb(0, 153, 0);
+    color: white;
+    border-radius: 9999px;
+    padding: 0.5rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+
+}
+
+.increase {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.decrease {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.price {
+    color: rgb(0, 153, 0);
+    font-size: 1.1rem;
+}
+
+#carousel-container {
+    display: flex;
+    gap: 10px;
+    transition: transform 0.5s ease;
+    width: calc(25% * 4);
+    /* This will show 4 items at once */
+    overflow: hidden;
+}
+
+
+.carousel-prev,
+.carousel-next {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.counter-section {
+    display: none;
+}
+
+.carousel {
+    overflow-x: hidden;
+    /* Ensure no horizontal scrolling */
+    padding: 0;
+    /* Make sure there’s no unintended padding causing overflow */
+    box-sizing: border-box;
+    /* Include padding in the element's total width */
+}
+
+
+/* Carousel Styling */
+.owl-carousel {
+    position: relative;
+}
+
+
+.carousel-prev.hidden,
+.carousel-next.hidden {
+    display: none;
+}
+
+
+/* Navigation Buttons */
+.carousel-prev,
+.carousel-next {
+    background-color: #f3f4f6;
+    border: none;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: 0px 4px 6px rgba(229, 221, 221, 0.735);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    
+}
+
+.carousel-prev:hover,
+.carousel-next:hover {
+    background-color: #e5e7eb;
+    /* Darker gray */
+}
+
+
+
+
+.footer{
+    padding-top: 20px;
+}
+.footer h3{
+    margin-bottom: 8px;
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .footer .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .footer .flex {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .footer img {
+        margin-bottom: 1rem;
+    }
+
+    .footer ul {
+        text-align: center;
+    }
+
+    .footer .mt-8 {
+        margin-top: 2rem;
+    }
+    
+}
+
+.app{
+    background-color: rgb(0, 153, 0);
+ 
+}
+.shoppingbutton{
+    background-color: rgb(0, 153, 0);
+
+}
