@@ -85,6 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Product Card Add button Functionality
     const productCards = document.querySelectorAll('.product-card');
+    
 
     productCards.forEach((card) => {
         const addButton = card.querySelector('.addButton');

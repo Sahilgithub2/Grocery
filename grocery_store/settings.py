@@ -130,6 +130,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "grocery_app/static"]
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+CSRF_TRUSTED_ORIGINS = ["http://localhost", "http://127.0.0.1"]
 
 SESSION_COOKIE_SECURE = False  # Set to True in production with HTTPS
 SESSION_COOKIE_HTTPONLY = True

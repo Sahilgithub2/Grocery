@@ -58,7 +58,7 @@
                     Login
                 </button>
                 <div class="relative cursor-pointer" aria-label="Shopping Cart">
-                    <a href="{% url 'view_cart' %}" class="flex items-center">
+                    <a href="{% url 'cart' %}" class="flex items-center">
                         <i class="fas fa-shopping-cart text-xl"></i>
                         <span id="cart-count"
                             class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center shadow-lg">
@@ -92,23 +92,25 @@
                     <h2 class="text-2xl font-bold text-green-500">Login</h2>
                 </div>
 
+      
+
                 <!-- Login Form -->
-                <form action="#" method="POST">
+                <form id="login-form">
                     <!-- Email or Phone Input -->
                     <div class="mb-4">
                         <label for="email-or-phone" class="block text-sm font-medium text-gray-700">Email or
                             Phone</label>
                         <input type="text" id="email-or-phone" name="email-or-phone"
-                            class="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
-                            required>
+                        class="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md text-black focus:outline-none focus:ring-2 focus:ring-green-400"
+                        required>
                     </div>
 
                     <!-- Password Input -->
                     <div class="mb-4">
                         <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
                         <input type="password" id="password" name="password"
-                            class="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
-                            required>
+                        class="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md text-black focus:outline-none focus:ring-2 focus:ring-green-400"
+                        required>
                             
                     </div>
 
@@ -132,11 +134,12 @@
                     
                         <!-- Textbox to Enter CAPTCHA -->
                         <input type="text" id="captcha-input" name="captcha"
-                            class="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
-                            placeholder="Enter Captcha" required>
+                        class="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md text-black focus:outline-none focus:ring-2 focus:ring-green-400"
+                        placeholder="Enter Captcha" required>
+                            
                     </div>
                     
-                    <script>
+                    {% comment %} <script>
                         // Function to generate random CAPTCHA
                         function generateCaptcha() {
                             let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -152,7 +155,40 @@
                     
                         // Generate a CAPTCHA on page load
                         generateCaptcha();
-                    </script>
+                    </script> {% endcomment %}
+                    <script>
+                        document.addEventListener("DOMContentLoaded", function () {
+                            // Generate CAPTCHA
+                            function generateCaptcha() {
+                                let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+                                let captcha = "";
+                                for (let i = 0; i < 6; i++) {
+                                    captcha += chars.charAt(Math.floor(Math.random() * chars.length));
+                                }
+                                document.getElementById("captcha-text").textContent = captcha;
+                                document.getElementById("captcha-input").dataset.captcha = captcha;  // Store actual CAPTCHA for validation
+                            }
+                        
+                            // Reload CAPTCHA
+                            document.getElementById("reload-captcha").addEventListener("click", generateCaptcha);
+                        
+                            // Validate CAPTCHA before submitting the login form
+                            document.querySelector("form").addEventListener("submit", function (event) {
+                                let userInput = document.getElementById("captcha-input").value;
+                                let actualCaptcha = document.getElementById("captcha-input").dataset.captcha;
+                        
+                                if (userInput !== actualCaptcha) {
+                                    event.preventDefault();  // Stop form submission
+                                    alert("❌ Incorrect CAPTCHA. Please try again.");
+                                    generateCaptcha();  // Reload CAPTCHA
+                                }
+                            });
+                        
+                            // Generate CAPTCHA on page load
+                            generateCaptcha();
+                        });
+                        </script>
+                        
                     
 
                     <!-- Login Button -->
@@ -160,7 +196,7 @@
                         class="w-full py-2 px-4 bg-green-500 text-white rounded-md font-bold hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 transition duration-300">
                         Login
                     </button>
-                </form>
+                </form> 
 
                 <!-- Forgot Password & Sign Up Links -->
                 <div class="mt-4 text-center">
@@ -188,22 +224,23 @@
                 </div>
 
                 <!-- Sign Up Form -->
-                <form action="#" method="POST">
+                <form id="sign-up-form">
+                    
                     <!-- Email or Phone Input -->
                     <div class="mb-4">
                         <label for="sign-up-email-or-phone" class="block text-sm font-medium text-gray-700">Email or
                             Phone</label>
                         <input type="text" id="sign-up-email-or-phone" name="sign-up-email-or-phone"
-                            class="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
-                            required>
+                        class="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md text-black focus:outline-none focus:ring-2 focus:ring-green-400"
+                        required>
                     </div>
 
                     <!-- Password Input -->
                     <div class="mb-4">
                         <label for="sign-up-password" class="block text-sm font-medium text-gray-700">Password</label>
                         <input type="password" id="sign-up-password" name="sign-up-password"
-                            class="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
-                            required>
+                        class="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md text-black focus:outline-none focus:ring-2 focus:ring-green-400"
+                        required>
                     </div>
 
                     <!-- Confirm Password Input -->
@@ -211,8 +248,8 @@
                         <label for="confirm-password" class="block text-sm font-medium text-gray-700">Confirm
                             Password</label>
                         <input type="password" id="confirm-password" name="confirm-password"
-                            class="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
-                            required>
+                        class="w-full px-4 py-2 mt-2 border border-gray-300 rounded-md text-black focus:outline-none focus:ring-2 focus:ring-green-400"
+                        required>
                     </div>
 
                     <!-- Sign Up Button -->
@@ -1537,6 +1574,75 @@
 });
 
 
+</script>
+
+<script>
+    document.getElementById("reload-captcha").addEventListener("click", function () {
+        fetch("{% url 'captcha_refresh' %}")  
+            .then(response => response.json())
+            .then(data => {
+                document.querySelector(".captcha-container img").src = data.image_url;  // ✅ Refresh CAPTCHA image
+                document.querySelector("[name='captcha_0']").value = data.key;  // ✅ Update CAPTCHA key
+            })
+            .catch(error => console.error("Error refreshing CAPTCHA:", error));
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // ✅ LOGIN FUNCTION
+        document.getElementById("login-form").addEventListener("submit", function (event) {
+            event.preventDefault(); // Prevent default form submission
+
+            let formData = new FormData(this);
+
+            fetch("{% url 'login_view' %}", {
+                method: "POST",
+                body: formData,
+                headers: { "X-CSRFToken": getCSRFToken() }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Login Successful!");
+                    location.reload();  // Reload page on successful login
+                } else {
+                    alert("Error: " + data.error);
+                }
+            })
+            .catch(error => console.error("Error logging in:", error));
+        });
+
+        // ✅ SIGNUP FUNCTION
+        document.getElementById("sign-up-form").addEventListener("submit", function (event) {
+            event.preventDefault(); // Prevent default form submission
+
+            let formData = new FormData(this);
+
+            fetch("{% url 'sign_up_view' %}", {
+                method: "POST",
+                body: formData,
+                headers: { "X-CSRFToken": getCSRFToken() }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Signup Successful! You can now log in.");
+                    location.reload(); // Reload page to show login form
+                } else {
+                    alert("Error: " + data.error);
+                }
+            })
+            .catch(error => console.error("Error signing up:", error));
+        });
+
+        // ✅ FUNCTION TO GET CSRF TOKEN
+        function getCSRFToken() {
+            return document.cookie.split("; ")
+                .find(row => row.startsWith("csrftoken="))
+                ?.split("=")[1];
+        }
+    });
 </script>
 
 

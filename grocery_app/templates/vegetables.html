@@ -11,9 +11,15 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="{% static 'js/cart.js' %}" defer></script>
+    <script src="script.js"></script>
+
 </head>
 
 <body>
+    <div id="cart-container"></div>
+    <div id="emptyCart" class="hidden"></div>
+
     <header class="header sticky top-0 left-0 w-full z-50 text-white shadow-md">
         <div class="container mx-auto flex flex-col sm:flex-row items-center justify-between px-6">
 
@@ -367,14 +373,33 @@ gap: 20px;
             cartCount.textContent = currentCount;
         }
     </script>
-    <!-- Categories -->
+    {% comment %} <!-- Categories -->
     <div class=" p-4 flex flex-wrap gap-4 justify-center">
         <button class="bg-white px-4 py-2 rounded-full shadow border border-green-800">All</button>
         <button class="bg-white px-4 py-2 rounded-full shadow border border-green-800">OTP</button>
         <button class="bg-white px-4 py-2 rounded-full shadow border border-green-800">Greens</button>
         <button class="bg-white px-4 py-2 rounded-full shadow border border-green-800">Herbs and Seasoning</button>
     </div>
-    </head>
+    </head> {% endcomment %}
+    <div class="p-4 flex flex-wrap gap-4 justify-center">
+        <button class="bg-white px-4 py-2 rounded-full shadow border border-green-800 filter-button"
+            data-category="Vegetables" data-subcategory="">All</button>
+    
+        <button class="bg-white px-4 py-2 rounded-full shadow border border-green-800 filter-button"
+            data-category="Vegetables" data-subcategory="OTP">OTP</button>
+    
+        <button class="bg-white px-4 py-2 rounded-full shadow border border-green-800 filter-button"
+            data-category="Vegetables" data-subcategory="Greens">Greens</button>
+    
+        <button class="bg-white px-4 py-2 rounded-full shadow border border-green-800 filter-button"
+            data-category="Vegetables" data-subcategory="Herbs and Seasoning">Herbs and Seasoning</button>
+    </div>
+    
+    <!-- Container where products will be displayed -->
+    <div id="products-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
+        <!-- Products will be dynamically inserted here -->
+    </div>
+    
 
 
 
@@ -1245,8 +1270,46 @@ gap: 20px;
         </div>
         </div>
     </footer>
-
-
+   <script> 
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".filter-button").forEach(button => {
+            button.addEventListener("click", function () {
+                let category = "Vegetable";  // Change this for other pages like Fruits, Eggs, etc.
+                let subcategory = this.textContent.trim();  // Get the button's text as subcategory
+    
+                fetch(`/filter_products/?category=${category}&subcategory=${subcategory}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        let productsContainer = document.getElementById("products-container");
+                        productsContainer.innerHTML = "";  
+    
+                        if (data.products.length === 0) {
+                            productsContainer.innerHTML = "<p class='text-center text-red-500'>No products found.</p>";
+                            return;
+                        }
+    
+                        data.products.forEach(product => {
+                            let subcategoryText = product.subcategory ? product.subcategory : "General"; 
+    
+                            productsContainer.innerHTML += `
+                                <div class="product-card bg-white p-4 rounded shadow text-center">
+                                    <img src="${product.image_url}" alt="${product.name}" class="w-full h-32 object-cover rounded">
+                                    <h3 class="text-lg font-semibold mt-2">${product.name}</h3>
+                                    <p class="font-bold">R ${product.price}</p>
+                                    <p class="text-sm text-gray-500">${subcategoryText}</p>  
+                                    <button class="add-to-cart bg-green-500 text-white px-4 py-2 rounded mt-2" data-id="${product.id}">Add to Cart</button>
+                                </div>
+                            `;
+                        });
+                    })
+                    .catch(error => console.error("Error fetching products:", error));
+            });
+        });
+    });
+    
+</script>
+        
+        
 
 </body>
 

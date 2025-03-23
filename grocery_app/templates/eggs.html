@@ -11,9 +11,15 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="{% static 'js/cart.js' %}" defer></script>
+    <script src="script.js"></script>
+
 </head>
 
 <body>
+    <div id="cart-container"></div>
+    <div id="emptyCart" class="hidden"></div>
+
     <header class="header sticky top-0 left-0 w-full z-50 text-white shadow-md">
         <div class="container mx-auto flex flex-col sm:flex-row items-center justify-between px-6">
 
@@ -38,8 +44,12 @@
                 const searchInput = document.getElementById("search-input");
                 const productCards = document.querySelectorAll(".product-card");
                 const noResultsMessage = document.getElementById("no-results");
+
+                const noResultsMessage = document.getElementById("no-results");
             
                 // Listen for input changes in the search bar
+                const query = searchInput.value.trim().toLowerCase(); // Get the query and ensure it's lower case
+
                 searchInput.addEventListener("input", function () {
                     const query = searchInput.value.trim().toLowerCase(); // Get the query and ensure it's lower case
                     console.log('Search Query:', query); // Log the query to check what user types
@@ -47,11 +57,15 @@
                     let hasVisibleResults = false;
             
                     // Loop through each product card and check if it matches the search query
-                    productCards.forEach((card) => {
+                productCards.forEach((card) => {
+                    const productName = card.getAttribute("data-product-name").toLowerCase(); // Get the product name
+
                         const productName = card.getAttribute("data-product-name").toLowerCase(); // Get the product name
                         console.log('Checking card:', productName); // Log each product name being checked
             
-                        if (productName.includes(query)) {  // This performs a partial match
+                    if (productName.includes(query)) {  // This performs a partial match
+                        card.style.display = "block"; // Show the product card
+
                             card.style.display = "block"; // Show the product card
                             hasVisibleResults = true;
                         } else {
@@ -60,6 +74,8 @@
                     });
             
                     // Show the "No items found" message if no results are visible
+                    if (!hasVisibleResults) {
+
                     if (!hasVisibleResults) {
                         console.log('No products matched. Showing "No items found".');
                         noResultsMessage.classList.remove("hidden"); // Show the "No items found" message
@@ -276,7 +292,7 @@
         <a href="{% url 'eggs' %}" class="text-green-700 font-semibold nav-link">Eggs & Poultry</a>
     </nav>
 
-    <!-- Categories -->
+    {% comment %} <!-- Categories -->
     <div class=" p-4 flex flex-wrap gap-4 justify-center">
         <button class="bg-white px-4 py-2 rounded-full shadow border border-green-800">All</button>
         <button class="bg-white px-4 py-2 rounded-full shadow border border-green-800">Eggs</button>
@@ -286,7 +302,32 @@
         <button class="bg-white px-4 py-2 rounded-full shadow border border-green-800">Turkey</button>
         <button class="bg-white px-4 py-2 rounded-full shadow border border-green-800">Quail</button>
         <button class="bg-white px-4 py-2 rounded-full shadow border border-green-800">Goose</button>
+    </div> {% endcomment %}
+
+    <!-- Eggs & Poultry Categories Section -->
+    <div class="p-4 flex flex-wrap gap-4 justify-center">
+        <button class="filter-button bg-white px-4 py-2 rounded-full shadow border border-green-800" 
+            data-category="Eggs & Poultry" data-subcategory="">All</button>
+        <button class="filter-button bg-white px-4 py-2 rounded-full shadow border border-green-800" 
+            data-category="Eggs & Poultry" data-subcategory="Eggs">Eggs</button>
+        <button class="filter-button bg-white px-4 py-2 rounded-full shadow border border-green-800" 
+            data-category="Eggs & Poultry" data-subcategory="Chicken">Chicken</button>
+        <button class="filter-button bg-white px-4 py-2 rounded-full shadow border border-green-800" 
+            data-category="Eggs & Poultry" data-subcategory="Duck">Duck</button>
+        <button class="filter-button bg-white px-4 py-2 rounded-full shadow border border-green-800" 
+            data-category="Eggs & Poultry" data-subcategory="Turkey">Turkey</button>
+        <button class="filter-button bg-white px-4 py-2 rounded-full shadow border border-green-800" 
+            data-category="Eggs & Poultry" data-subcategory="Quail">Quail</button>
+        <button class="filter-button bg-white px-4 py-2 rounded-full shadow border border-green-800" 
+            data-category="Eggs & Poultry" data-subcategory="Goose">Goose</button>
     </div>
+    
+
+    <!-- Eggs & Poultry Products Section -->
+    <div id="products-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
+        <!-- Filtered products will be displayed here -->
+    </div>
+    
 
 
     <style>
@@ -350,7 +391,9 @@ gap: 20px;
                 <div class="flex items-center mt-4 text-center justify-center">
                     <button class="addButton text-green-600 py-2 px-6 rounded-lg bg-green-100
                     border border-green-600 font-bold hover:bg-white focus:outline-none focus:ring-2
-                    focus:ring-green-400 transition duration-300">ADD</button>
+                    focus:ring-green-400 transition duration-300"
+                    data-product-id="{{ product.id }}" 
+    data-product-name="{{ product.name }}">ADD</button>
                     <div class="counterSection flex items-center space-x-2 hidden">
                         <!-- Counter Button -->
                         <div class="flex items-center bg-green-600 text-white rounded-lg px-2 py-1 shadow-md space-x-2">
@@ -547,8 +590,51 @@ gap: 20px;
         </div>
     </footer>
 
+    <script src="{% static 'js/cart.js' %}"></script>
+    <!-- Other HTML content -->
 
-
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const filterButtons = document.querySelectorAll(".filter-button");
+            const productsContainer = document.getElementById("products-container");
+        
+            function fetchAndRender(category, subcategory) {
+                fetch(`/filter_products/?category=${encodeURIComponent(category)}&subcategory=${encodeURIComponent(subcategory)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        productsContainer.innerHTML = ""; // Clear previous content
+                        if (data.products.length === 0) {
+                            productsContainer.innerHTML = "<p class='text-gray-500 font-semibold text-center'>No products available.</p>";
+                        } else {
+                            data.products.forEach(item => {
+                                const productDiv = document.createElement("div");
+                                productDiv.className = "bg-white p-4 shadow rounded-lg border border-green-300 text-center";
+                                productDiv.innerHTML = `
+                                    <img src="${item.image_url}" alt="${item.name}" class="w-full h-32 object-cover rounded-md">
+                                    <h3 class="font-bold mt-2">${item.name}</h3>
+                                    <p class="text-green-600 font-semibold">R ${item.price}</p>
+                                    <button class="bg-green-500 text-white px-4 py-2 rounded mt-2 add-to-cart" data-id="${item.id}">Add</button>
+                                `;
+                                productsContainer.appendChild(productDiv);
+                            });
+                        }
+                    })
+                    .catch(error => console.error("Error fetching products:", error));
+            }
+        
+            filterButtons.forEach(button => {
+                button.addEventListener("click", function () {
+                    const category = this.getAttribute("data-category");
+                    const subcategory = this.getAttribute("data-subcategory");
+                    fetchAndRender(category, subcategory);
+                });
+            });
+        
+            // Load all products initially
+            fetchAndRender("Eggs & Poultry", "");
+        });
+        </script>
+        
 </body>
 
 </html>

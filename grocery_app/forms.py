@@ -1,9 +1,8 @@
 from django import forms
-from captcha.fields import CaptchaField
+from django.contrib.auth.models import User
+from captcha.fields import CaptchaField  # ✅ Import CAPTCHA
 
-class CaptchaForm(forms.Form):
-    captcha = CaptchaField()
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['captcha'].widget.attrs['captcha_key'] = 'default'
+class LoginForm(forms.Form):
+    username = forms.CharField(max_length=150, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    captcha = CaptchaField()  # ✅ Ensure CAPTCHA is included
